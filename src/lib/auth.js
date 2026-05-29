@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
-const createAuth = (db) => {
+export const createAuth = (db) => {
     const origins = [
         process.env.FRONTEND_URL,
         "http://localhost:3000"
