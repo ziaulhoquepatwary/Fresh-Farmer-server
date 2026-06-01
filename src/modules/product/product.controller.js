@@ -118,3 +118,20 @@ export const createProduct = async (req, res) => {
         });
     }
 }
+
+export const getMyProducts = async (req, res) => {
+    try {
+        const products = await Product.find({ authorId: req.user.id })
+            .sort({ createdAt: -1 });
+
+        res.json({
+            success: true,
+            products
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
