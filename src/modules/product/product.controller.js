@@ -76,3 +76,45 @@ const getAllProducts = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 }
+
+export const createProduct = async (req, res) => {
+    try {
+        const body = req.body;
+
+        // tags: Product Features
+        if (typeof body.tags === 'string') {
+            body.tags = body.tags
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter((tag) => tag.length > 0);
+        }
+
+        const parsed = productValidationSchema.safeParse(body);
+
+        if (!parsed.success) {
+            return res.status(400).json({
+                success: true,
+                message: "validation faild",
+            })
+        }
+
+        const newProduct = await Product.create({
+            ...parsed.data,
+            authorId: req.user.id,
+            authorName: req.user.name,
+            likes: [],
+        })
+
+        res.status(201).json({
+            success: true,
+            message: "Product created successfully",
+            newProduct
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
